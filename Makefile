@@ -6,7 +6,7 @@
 #    By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 19:30:49 by jtaylor           #+#    #+#              #
-#    Updated: 2019/08/29 16:48:16 by jtaylor          ###   ########.fr        #
+#    Updated: 2019/08/30 12:47:16 by jtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,34 +16,46 @@ FLAGS = -Wall -Wextra -Werror -I ./libft/includes
 
 DEBUG_FLAG = -g3
 
+FSANITIZE = -fsanitize=address -fsanitize=undefined
+
 LINKED_LIB = -L ./minilibx_macos -l mlx 
 #"-lXext -lX11"
 
 FRAMEWORK = -framework OpenGL -framework AppKit
 
 MINILIBX_HEADER_PATH = ./minilibx_macos/
+MLX_DIR = minilibx_macos
 
 INCLUDES = -I ./libft/includes
 INCLUDES += -I ./includes
 INCLUDES += -I $(MINILIBX_HEADER_PATH)
 
-SRC = main.c
-
+SRC_FILE = main.c
+SRC = $(addprefix ./src/, $(SRC_FILE))
 
 .PHONY = all clean fclean re
 
-all : $(NAME)
+all : mlx_made $(NAME)
 
 $(NAME) :
 	@make -C ./libft
 	@make -C ./minilibx_macos
 	@echo "\tBuilding $(NAME) executable\n"
-	gcc $(FLAGS) $(SRC) $(FRAMEWORK) $(LINKED_LIB) $(INCLUDES) ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
+	gcc $(FLAGS) $(INCLUDES) $(FRAMEWORK) $(LINKED_LIB) $(SRC) ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
 
 debug :
 	@make debug -C ./libft
 	@echo "\tBuilding $(NAME) debug executable\n"
 	@gcc $(FLAGS) $(SRC) $(DEBUG_FLAG) -ltermcap -I ./includes ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
+
+fsan :
+	@make -C ./libft
+	@make -C ./minilibx_macos
+	@echo "\tBuilding $(NAME) executable\n"
+	gcc $(FLAGS) $(FSANITIZE) $(SRC) $(FRAMEWORK) $(LINKED_LIB) $(INCLUDES) -l ./libft/libft.a -l ./libft/ft_printf/libftprintf.a -o $(NAME)
+
+mlx_made :
+	tar -xvf minilibx.tar
 
 clean :
 	@make -C libft clean
@@ -53,6 +65,8 @@ fclean : clean
 	@rm -rf $(NAME)
 	@rm -rf $(NAME).dSYM
 	@make -C libft fclean
+#	@make -C $(MLX_DIR) clean
+	@rm -rf $(MLX_DIR)
 
 re : fclean all
 
