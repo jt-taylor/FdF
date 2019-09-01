@@ -6,7 +6,7 @@
 #    By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 19:30:49 by jtaylor           #+#    #+#              #
-#    Updated: 2019/08/30 12:47:16 by jtaylor          ###   ########.fr        #
+#    Updated: 2019/09/01 15:54:33 by jtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ INCLUDES = -I ./libft/includes
 INCLUDES += -I ./includes
 INCLUDES += -I $(MINILIBX_HEADER_PATH)
 
-SRC_FILE = main.c
+SRC_FILE = main.c \
+			fdf_read_input_file.c
 SRC = $(addprefix ./src/, $(SRC_FILE))
 
 .PHONY = all clean fclean re
@@ -45,14 +46,15 @@ $(NAME) :
 
 debug :
 	@make debug -C ./libft
+	@make -C ./minilibx_macos
 	@echo "\tBuilding $(NAME) debug executable\n"
-	@gcc $(FLAGS) $(SRC) $(DEBUG_FLAG) -ltermcap -I ./includes ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
+	gcc $(FLAGS) $(DEBUG_FLAG) $(INCLUDES) $(FRAMEWORK) $(LINKED_LIB) $(SRC) ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
 
 fsan :
 	@make -C ./libft
 	@make -C ./minilibx_macos
 	@echo "\tBuilding $(NAME) executable\n"
-	gcc $(FLAGS) $(FSANITIZE) $(SRC) $(FRAMEWORK) $(LINKED_LIB) $(INCLUDES) -l ./libft/libft.a -l ./libft/ft_printf/libftprintf.a -o $(NAME)
+	gcc $(FLAGS) $(FSANITIZE) $(SRC) $(FRAMEWORK) $(LINKED_LIB) $(INCLUDES) ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
 
 mlx_made :
 	tar -xvf minilibx.tar
