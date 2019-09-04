@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 11:54:29 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/01 15:50:24 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/03 19:47:46 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	count_nbr(char *line)
 			i++;
 		else
 			//errror invalid  char
-			exit(1);
+			fdf_putstrerr("invalid char ion input file", 1);
 	}
 	return (count);
 }
@@ -46,8 +46,7 @@ static int	count_rows(t_fdf *fdf, char *file_name)
 	char	*line;
 
 	if ((fd = open(file_name, O_RDONLY)) < 0)
-		//error open ;
-		;
+		fdf_putstrerr("failed to open file", 1);
 	r = 0;
 	c = 0;
 	while (get_next_line(fd, &line))
@@ -60,11 +59,10 @@ static int	count_rows(t_fdf *fdf, char *file_name)
 		free(line);
 	}
 	if (close(fd) < 0)
-		// error closing file lul;
-		;
+		fdf_putstrerr("failed to close file ????", 1);
 	else if (!(fdf->map.width = c))
 		// no columns lul ??
-		;
+		fdf_putstrerr("no colums ??? ... Wack", 1);
 	return (r);
 }
 
@@ -98,14 +96,13 @@ void		fdf_read_map(char *file_name, t_fdf *fdf)
 	if ((fd = open(file_name, O_RDONLY)) > -1)
 	{
 		if (!(fdf->map.map_values = (int **)malloc(sizeof(int *) * fdf->map.height)))
+			fdf_putstrerr("malloc errror in fdf_read_map()", 1);
 			//malloc error ;
-			;
 		while (get_next_line(fd, &line))
 		{
 			//parse_line_values
 			if (!(fdf->map.map_values[axis2] = (int*)malloc(sizeof(int) * fdf->map.width)))
-				//malloc error
-				;
+			fdf_putstrerr("malloc errror in fdf_read_map()", 1);
 			parse_line(axis1, axis2 ,line, fdf);
 			axis1 = 0;
 			axis2++;
@@ -113,6 +110,5 @@ void		fdf_read_map(char *file_name, t_fdf *fdf)
 		}
 	}
 	else
-		//error opening file
-		;
+		fdf_putstrerr("failed to open file", 1);
 }
