@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 17:45:12 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/03 19:46:20 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/04 14:32:21 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,25 @@ typedef struct	s_map
 
 typedef struct	s_image
 {
+	void	*image;
 }				t_image;
+
+typedef struct s_line_alg
+{
+	int		dx;
+	int		sx;
+	int		dy;
+	int		sy;
+	int		err1;
+	int		err2;
+}				t_line_alg;
 
 typedef struct	s_fdf
 {
 	t_minilibx	mlx;
 	t_map		map;
 	t_image		img;
+	t_line_alg	line;
 }				t_fdf;
 
 /*
@@ -63,5 +75,9 @@ void			fdf_putstrerr(char *str, int err_code);
 
 //testing remove me later
 void		test_display_grid(t_fdf *fdf);
+void		line_bresenham(int xstart, int ystart, int xfinal, int	yfinal,
+		t_fdf *fdf);
+void		test_simple_line(t_fdf *fdf);
+void		test_display__line(t_fdf *fdf);
 
 #endif

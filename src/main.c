@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 17:44:06 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/03 19:54:04 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/04 14:29:26 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ int		main(int ac, char **argv)
 		//takest the mlx pointer, a function pointer, and what argument to pass to the function
 		//   mlx_loop_hook(fdf->mlx.init, fdf_draw, fdf);
 		//what mlx uses to grab events;
-		test_display_grid(fdf);
+		//test_display_grid(fdf);
+		test_simple_line(fdf);
 		mlx_loop(fdf->mlx.init);
 	}
 	else

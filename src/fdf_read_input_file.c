@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 11:54:29 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/03 19:47:46 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/04 12:48:39 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	count_nbr(char *line)
 			i++;
 		else
 			//errror invalid  char
-			fdf_putstrerr("invalid char ion input file", 1);
+			fdf_putstrerr("invalid char in input file", 1);
 	}
 	return (count);
 }
