@@ -6,7 +6,7 @@
 #    By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 19:30:49 by jtaylor           #+#    #+#              #
-#    Updated: 2019/09/04 14:30:57 by jtaylor          ###   ########.fr        #
+#    Updated: 2019/09/05 17:18:20 by jtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ INCLUDES += -I $(MINILIBX_HEADER_PATH)
 SRC_FILE = main.c \
 			fdf_read_input_file.c \
 			draw_line.c \
+			fdf_draw_img.c \
 			fdf_draw_test.c
 SRC = $(addprefix ./src/, $(SRC_FILE))
 

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 17:44:06 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/04 14:29:26 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/05 17:16:45 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,22 @@ static void		fdf_init_mlx(t_fdf *fdf, char *win_name)
 	fdf->mlx.window = mlx_new_window(fdf->mlx.init, 1024, 1024, win_name);
 }
 
-// innit the setitngs for the display window ie color windowsize
+/*
+** initial settings for the camera && the projection options
+*/
 
 static void	fdf_init_map_options(t_fdf *fdf)
 {
-	//fill me in dummy
-	(void)fdf;
+	fdf->map.x_cord = 0;
+	fdf->map.y_cord = 0;
+	fdf->map.x_value = 1.00;
+	fdf->map.y_angle = 0.5; // cos(M_PI / 3) / cos(pi / 3);
+	fdf->map.z_angle = 0.25; // fdf->map.y_angle * sin(M_PI / 6) //.5 * .5
+	// norm doesn't like nested ternary's :[
+	fdf->map.zoom_value = (fdf->map.width > fdf->map.height) ? 
+		WINDOW_WIDTH / fdf->map.width + INI_ZOOM :
+		WINDOW_HEIGHT / fdf->map.height + INI_ZOOM;
+	fdf->map.isometric_value = 1;
 }
 
 int		main(int ac, char **argv)
@@ -53,14 +63,10 @@ int		main(int ac, char **argv)
 	if (ac == 2)
 	{
 		if (!(fdf = (t_fdf *)malloc(sizeof(t_fdf))))
-			//return error
+			fdf_putstrerr("malloc error", 1);
 			;
-		//read map;
-		//this reads the input file into a 2d int array ;
 		fdf_read_map(argv[1], fdf);
-		// init map struct;
 		fdf_init_map_options(fdf);
-		//init mlx mindow;
 		fdf_init_mlx(fdf, argv[1]);
 		//hook keys;
 		//mlx_hook(fdf->mlx.window, 
@@ -70,7 +76,8 @@ int		main(int ac, char **argv)
 		//   mlx_loop_hook(fdf->mlx.init, fdf_draw, fdf);
 		//what mlx uses to grab events;
 		//test_display_grid(fdf);
-		test_simple_line(fdf);
+		//test_simple_line(fdf);
+		fdf_draw(fdf);
 		mlx_loop(fdf->mlx.init);
 	}
 	else

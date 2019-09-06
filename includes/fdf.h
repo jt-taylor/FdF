@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 17:45:12 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/04 14:32:21 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/05 17:17:49 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@
 # include <math.h>
 # include <time.h>
 
+/*
+** macros
+*/
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
+# define INI_ZOOM 2
+
 typedef struct	s_minilibx
 {
 	void	*init;
@@ -33,15 +40,21 @@ typedef struct	s_minilibx
 
 typedef struct	s_map
 {
-	int		**map_values;
+	int		**map_values; // matrix built from the input file
 	int		height; // how many rows
 	int		width; // how many numbers in each row
+	int		x_cord;
+	int		y_cord;
+	int		y0;
+	int		y1;
+	int		z0;
+	int		z1;
+	int		zoom_value;
+	int		isometric_value;
+	double	x_value;
+	double	y_angle;
+	double	z_angle;
 }				t_map;
-
-typedef struct	s_image
-{
-	void	*image;
-}				t_image;
 
 typedef struct s_line_alg
 {
@@ -57,7 +70,6 @@ typedef struct	s_fdf
 {
 	t_minilibx	mlx;
 	t_map		map;
-	t_image		img;
 	t_line_alg	line;
 }				t_fdf;
 
@@ -66,6 +78,12 @@ typedef struct	s_fdf
 */
 
 void			fdf_read_map(char *file_name, t_fdf *fdf);
+
+/*
+** fdf_draw_img.c
+*/
+
+void		fdf_draw(t_fdf *fdf);
 
 /*
 ** main.c
@@ -78,6 +96,6 @@ void		test_display_grid(t_fdf *fdf);
 void		line_bresenham(int xstart, int ystart, int xfinal, int	yfinal,
 		t_fdf *fdf);
 void		test_simple_line(t_fdf *fdf);
-void		test_display__line(t_fdf *fdf);
+void		test_display_line_image(t_fdf *fdf);
 
 #endif

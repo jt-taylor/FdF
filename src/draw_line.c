@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 13:34:24 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/04 15:12:08 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/05 11:41:34 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,22 @@
 ** I'm sure that you want more info so check the fdf cookbook on intra ,
 ** And look at the libftgfx github --> has a ton of links for all of the 
 ** graphics projects ,the link at the moment https://github.com/qst0/ft_libgfx
-** // I know it's bad to link to things that I don't own / maintain but
-** // I'm sure that you can deal with it
+** also this link
+** https://unionassets.com/blog/algorithm-brezenhema-and-wu-s-line-299
+*/
+
+/*
+** I decided to use the mlx_pixel_put instead of the mlx_image functionality
+** so I don't care about the gradiant that using xaolin would give us
+*/
+
+/*
+** this is a implementaiton of the bresenham alg,
+**
+** it draws a line from (x-start, y-start) -> (x-end, y-end) into
+** the mlx window with mlx_pixel_put
+**
+** to modify this to use the mlx image functions change mlx_pixel_put function
 */
 
 void		line_bresenham(int xstart, int ystart, int xfinal, int yfinal,
@@ -39,10 +53,9 @@ void		line_bresenham(int xstart, int ystart, int xfinal, int yfinal,
 	fdf->line.dy = abs(yfinal - ystart);
 	fdf->line.sy = (ystart < yfinal) ? 1 : -1;
 	fdf->line.err1 = (fdf->line.dx > fdf->line.dy) ? fdf->line.dx / 2 : fdf->line.dy / 2;
-	//grr infinite loop bad
 	while (1)
 	{
-		mlx_pixel_put(fdf->mlx.init, fdf->mlx.window, xstart, ystart, 0xFFFF00);//color
+		mlx_pixel_put(fdf->mlx.init, fdf->mlx.window, xstart, ystart, 0xFFFF00);
 		if (xstart == xfinal && ystart == yfinal)
 			break ;
 		fdf->line.err2 = fdf->line.err1;
