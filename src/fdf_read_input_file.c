@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 11:54:29 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/04 12:48:39 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/06 20:09:19 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static int	count_nbr(char *line)
 		else if (line[i] == ' ' || line[i] == '-')
 			i++;
 		else
-			//errror invalid  char
 			fdf_putstrerr("invalid char in input file", 1);
 	}
 	return (count);
@@ -39,11 +38,11 @@ static int	count_nbr(char *line)
 
 static int	count_rows(t_fdf *fdf, char *file_name)
 {
-	int		fd;
-	int		nbr_count;
-	int		r;
-	int		c;
-	char	*line;
+	int				fd;
+	int				nbr_count;
+	int				r;
+	static int		c;
+	char			*line;
 
 	if ((fd = open(file_name, O_RDONLY)) < 0)
 		fdf_putstrerr("failed to open file", 1);
@@ -53,15 +52,15 @@ static int	count_rows(t_fdf *fdf, char *file_name)
 	{
 		if (!*line)
 			break ;
-		if ((nbr_count = count_nbr(line))) //count total nuimbers on this line) > c)
-			c = nbr_count;
-		(c == nbr_count) ? r++ : 0;//error invalid input ,
+		if ((nbr_count = count_nbr(line)))
+			(c == 0) ? c = nbr_count : 0;
+		(c == nbr_count) ? r++ : fdf_putstrerr("error invalid input ,", 1);
 		free(line);
 	}
+	free(line);
 	if (close(fd) < 0)
 		fdf_putstrerr("failed to close file ????", 1);
 	else if (!(fdf->map.width = c))
-		// no columns lul ??
 		fdf_putstrerr("no colums ??? ... Wack", 1);
 	return (r);
 }
@@ -74,14 +73,20 @@ static void	parse_line(int axis1, int axis2, char *line, t_fdf *fdf)
 	if ((broken = ft_strsplit(line, ' ')))
 	{
 		i = 0;
-		while (broken[i])// && not out of bounds)
+		while (broken[i])
 		{
 			fdf->map.map_values[axis2][axis1] = ft_atoi(broken[i++]);
 			axis1++;
 		}
-		free(broken);
+		ft_freestrarr(broken);
 	}
 }
+
+/*
+** yes i know the two malloc's aren't proteced
+** but funtions can only have 25 lines
+** at least for norm, I don't feel like macroing it
+*/
 
 void		fdf_read_map(char *file_name, t_fdf *fdf)
 {
@@ -95,19 +100,18 @@ void		fdf_read_map(char *file_name, t_fdf *fdf)
 	fdf->map.height = count_rows(fdf, file_name);
 	if ((fd = open(file_name, O_RDONLY)) > -1)
 	{
-		if (!(fdf->map.map_values = (int **)malloc(sizeof(int *) * fdf->map.height)))
-			fdf_putstrerr("malloc errror in fdf_read_map()", 1);
-			//malloc error ;
+		fdf->map.map_values = (int **)malloc(sizeof(int *) * fdf->map.height);
 		while (get_next_line(fd, &line))
 		{
-			//parse_line_values
-			if (!(fdf->map.map_values[axis2] = (int*)malloc(sizeof(int) * fdf->map.width)))
-			fdf_putstrerr("malloc errror in fdf_read_map()", 1);
-			parse_line(axis1, axis2 ,line, fdf);
+			fdf->map.map_values[axis2] = (int*)malloc(sizeof(int)
+					* fdf->map.width);
+			parse_line(axis1, axis2, line, fdf);
 			axis1 = 0;
 			axis2++;
 			free(line);
 		}
+		free(line);
+		close(fd);
 	}
 	else
 		fdf_putstrerr("failed to open file", 1);

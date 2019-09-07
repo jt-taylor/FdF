@@ -6,7 +6,7 @@
 #    By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/16 19:30:49 by jtaylor           #+#    #+#              #
-#    Updated: 2019/09/05 17:18:20 by jtaylor          ###   ########.fr        #
+#    Updated: 2019/09/06 13:21:25 by jtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ DEBUG_FLAG = -g3
 
 FSANITIZE = -fsanitize=address -fsanitize=undefined
 
-LINKED_LIB = -L ./minilibx_macos -l mlx 
+LINKED_LIB = -L ./minilibx_macos -l mlx
 #"-lXext -lX11"
 
 FRAMEWORK = -framework OpenGL -framework AppKit
@@ -34,6 +34,7 @@ SRC_FILE = main.c \
 			fdf_read_input_file.c \
 			draw_line.c \
 			fdf_draw_img.c \
+			fdf_keypress.c \
 			fdf_draw_test.c
 SRC = $(addprefix ./src/, $(SRC_FILE))
 
@@ -47,7 +48,7 @@ $(NAME) :
 	@echo "\tBuilding $(NAME) executable\n"
 	gcc $(FLAGS) $(INCLUDES) $(FRAMEWORK) $(LINKED_LIB) $(SRC) ./libft/libft.a ./libft/ft_printf/libftprintf.a -o $(NAME)
 
-debug :
+debug : mlx_made
 	@make debug -C ./libft
 	@make -C ./minilibx_macos
 	@echo "\tBuilding $(NAME) debug executable\n"

@@ -6,7 +6,7 @@
 /*   By: jtaylor <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 13:34:24 by jtaylor           #+#    #+#             */
-/*   Updated: 2019/09/05 11:41:34 by jtaylor          ###   ########.fr       */
+/*   Updated: 2019/09/06 20:05:40 by jtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 ** 		the pixel based on the 'error' from the true line;
 **
 ** I'm sure that you want more info so check the fdf cookbook on intra ,
-** And look at the libftgfx github --> has a ton of links for all of the 
+** And look at the libftgfx github --> has a ton of links for all of the
 ** graphics projects ,the link at the moment https://github.com/qst0/ft_libgfx
 ** also this link
 ** https://unionassets.com/blog/algorithm-brezenhema-and-wu-s-line-299
@@ -45,24 +45,26 @@
 ** to modify this to use the mlx image functions change mlx_pixel_put function
 */
 
-void		line_bresenham(int xstart, int ystart, int xfinal, int yfinal,
+void		line_bresenham(int ystart, int xfinal, int yfinal,
 		t_fdf *fdf)
 {
-	fdf->line.dx = abs(xfinal - xstart);
-	fdf->line.sx = (xstart < xfinal) ? 1 : -1;
+	fdf->line.dx = abs(xfinal - fdf->map.y0);
+	fdf->line.sx = (fdf->map.y0 < xfinal) ? 1 : -1;
 	fdf->line.dy = abs(yfinal - ystart);
 	fdf->line.sy = (ystart < yfinal) ? 1 : -1;
-	fdf->line.err1 = (fdf->line.dx > fdf->line.dy) ? fdf->line.dx / 2 : fdf->line.dy / 2;
+	fdf->line.err1 =
+		(fdf->line.dx > fdf->line.dy) ? fdf->line.dx / 2 : fdf->line.dy / 2;
 	while (1)
 	{
-		mlx_pixel_put(fdf->mlx.init, fdf->mlx.window, xstart, ystart, 0xFFFF00);
-		if (xstart == xfinal && ystart == yfinal)
+		mlx_pixel_put(fdf->mlx.init, fdf->mlx.window, fdf->map.y0, ystart,
+				fdf->map.color);
+		if (fdf->map.y0 == xfinal && ystart == yfinal)
 			break ;
 		fdf->line.err2 = fdf->line.err1;
 		if (fdf->line.err2 > -fdf->line.dx)
 		{
 			fdf->line.err1 -= fdf->line.dy;
-			(xstart != xfinal) ? xstart += fdf->line.sx : 0;
+			(fdf->map.y0 != xfinal) ? fdf->map.y0 += fdf->line.sx : 0;
 		}
 		if (fdf->line.err2 < fdf->line.dy)
 		{
